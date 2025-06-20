@@ -47,11 +47,8 @@ const LinkForm = ({
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you absolutely sure?</DialogTitle>
-          <DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </DialogDescription>
+          <DialogTitle>Create your Bookmark</DialogTitle>
+
           <FormComponent
             onOpenChange={setIsOpen}
             categories={categories}
@@ -99,7 +96,7 @@ function FormComponent({
       title: "",
       url: "",
       notes: "",
-      category: categories[0].id,
+      category: "",
     },
   });
 
@@ -109,7 +106,6 @@ function FormComponent({
       ...data,
       userId: session?.data?.user?.id,
     };
-    console.log(payload);
     const res = await fetch("/api/v1/link", {
       method: "POST",
       headers: {
@@ -119,8 +115,6 @@ function FormComponent({
     });
     const newLink = await res.json();
     onNewLink(newLink);
-
-    console.log(res);
 
     onOpenChange(false);
     form.reset();
@@ -138,9 +132,7 @@ function FormComponent({
               <FormControl>
                 <Input placeholder="Title" {...field} />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
+
               <FormMessage />
             </FormItem>
           )}
@@ -160,9 +152,7 @@ function FormComponent({
                   ))}
                 </select>
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
+
               <FormMessage />
             </FormItem>
           )}
@@ -176,9 +166,7 @@ function FormComponent({
               <FormControl>
                 <Input placeholder="url.." {...field} />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
+
               <FormMessage />
             </FormItem>
           )}
@@ -192,9 +180,7 @@ function FormComponent({
               <FormControl>
                 <Input placeholder="notes" {...field} />
               </FormControl>
-              <FormDescription>
-                This is your public display notes.
-              </FormDescription>
+
               <FormMessage />
             </FormItem>
           )}
