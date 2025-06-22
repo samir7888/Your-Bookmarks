@@ -9,7 +9,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "../ui/button";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,7 +19,6 @@ import { z } from "zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -71,10 +70,11 @@ function FormComponent({
   categories: any;
   onNewLink: (link: any) => void;
 }) {
+  const [isLoading, setIsLoading] = useState(false);
   const session = useSession();
   const formSchema = z.object({
-    title: z.string().min(2, {
-      message: "Title must be at least 2 characters.",
+    title: z.string().min(3, {
+      message: "Title must be at least 3 characters.",
     }),
     category: z.string().min(2, {
       message: "Category must be at least 2 characters.",
@@ -85,9 +85,12 @@ function FormComponent({
         message: "URL must be at least 2 characters.",
       })
       .url(),
-    notes: z.string().min(2, {
-      message: "Notes must be at least 2 characters.",
-    }),
+    notes: z
+      .string()
+      .min(2, {
+        message: "Notes must be at least 4 characters.",
+      })
+      .optional(),
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -101,7 +104,7 @@ function FormComponent({
   });
 
   const onsubmit = async (data: any) => {
-    console.log(data);
+    setIsLoading(true);
     const payload = {
       ...data,
       userId: session?.data?.user?.id,
@@ -117,6 +120,7 @@ function FormComponent({
     onNewLink(newLink);
 
     onOpenChange(false);
+    setIsLoading(false);
     form.reset();
   };
 
@@ -145,8 +149,9 @@ function FormComponent({
               <FormLabel>Category</FormLabel>
               <FormControl className="p-2 rounded-md">
                 <select {...field}>
+                  <option value='' disabled selected hidden>Select a category</option>
                   {categories.map((category: CategoryType) => (
-                    <option className="p-2" value={category.id}>
+                    <option className="p-2 capitalize" value={category.id} key={category.id}>
                       {category.name}
                     </option>
                   ))}
@@ -186,7 +191,9 @@ function FormComponent({
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <Button disabled={isLoading} type="submit">
+          {isLoading ? "Submitting..." : "Submit"}
+        </Button>
       </form>
     </Form>
   );

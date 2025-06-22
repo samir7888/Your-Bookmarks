@@ -8,7 +8,6 @@ import { fetchCategories } from "@/hooks/fetch-category";
 import { fetchLinks } from "@/hooks/fetch-links";
 import { CategoryType } from "@/types/category-type";
 import { LinkType } from "@/types/links-type";
-import Link from "next/link";
 import LinkSection from "@/components/LinkSection";
 import CategorySection from "@/components/ui/category-section";
 

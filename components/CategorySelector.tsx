@@ -1,17 +1,11 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "./ui/form";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import { useSession } from "next-auth/react";
 
 const CategorySelector = ({
@@ -19,6 +13,7 @@ const CategorySelector = ({
 }: {
   onNewCategory: (category: any) => void;
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const session = useSession();
   const formSchema = z.object({
     name: z.string().min(2, {
@@ -38,16 +33,24 @@ const CategorySelector = ({
       ...data,
       userId: session?.data?.user?.id,
     };
-    const res = await fetch("/api/v1/category", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-    const newCategory = await res.json();
-    onNewCategory(newCategory);
-    form.setValue("name", "");
+
+    try {
+      setIsLoading(true);
+      const res = await fetch("/api/v1/category", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+      const newCategory = await res.json();
+      onNewCategory(newCategory);
+      form.setValue("name", "");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -66,7 +69,9 @@ const CategorySelector = ({
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button disabled={isLoading} type="submit">
+          {isLoading ? "Submitting..." : "Add"}
+        </Button>
       </form>
     </Form>
   );

@@ -11,7 +11,7 @@ const LinkSection = ({
   initialLinks,
 }: {
   categories: CategoryType[];
-  initialLinks: LinkType[] | [];
+  initialLinks: LinkType[];
 }) => {
   const [showDialog, setShowDialog] = useState(false);
   const [links, setLinks] = useState(initialLinks);
