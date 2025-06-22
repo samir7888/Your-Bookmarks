@@ -21,8 +21,8 @@ model User {
 model Category {
   id        String   @id @default(cuid())
   name      String
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
+  user      User     @relation(fields: [userEmail], references: [email], onDelete: Cascade)
+  userEmail String   @unique
   links     Link[]
 }
 
@@ -32,9 +32,9 @@ model Link {
   url         String
   notes       String?
   isPublic    Boolean  @default(false)
-  category    Category @relation(fields: [categoryId], references: [id])
+  category    Category @relation(fields: [categoryId], references: [id],onDelete: Cascade) 
   categoryId  String
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
+  userEmail   String   @unique
+  user        User     @relation(fields: [userEmail], references: [email], onDelete: Cascade)
   createdAt   DateTime @default(now())
 }

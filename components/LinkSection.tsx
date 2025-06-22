@@ -31,19 +31,38 @@ const LinkSection = ({
       {/* List */}
       <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {links.map((link) => (
-          <Link key={link.id} href={link.url} target="_blank">
-            <div className="bg-white h-auto p-4 rounded-lg shadow border border-gray-200">
-              <h1 className="capitalize text-lg font-semibold text-blue-600 hover:underline">
-                {link.title}
-              </h1>
-              <p className="text-sm text-gray-500 mt-1 line-clamp-1">
-                {link?.notes}
-              </p>
-              <p className="text-xs mt-2 text-gray-400">
-                Category: {link.category?.name}
-              </p>
+          <div key={link.id} className="group bg-white h-auto p-4 rounded-lg shadow border border-gray-200">
+            <div className="flex justify-between">
+              <Link key={link.id} href={link.url} target="_blank">
+                <h1 className="capitalize text-lg font-semibold text-blue-600 hover:underline">
+                  {link.title}
+                </h1>
+              </Link>
+
+              <button
+                onClick={() => {
+                  const res = fetch(`/api/v1/link/${link.id}`, {
+                    method: "DELETE",
+                  });
+                  res
+                    .then((res) => res.json())
+                    .then((data) => {
+                      console.log(data);
+                      setLinks(data);
+                    });
+                }}
+                className="opacity-0 invisible group-hover:visible group-hover:opacity-100 text-sm text-gray-500 hover:underline"
+              >
+                Delete
+              </button>
             </div>
-          </Link>
+            <p className="text-sm text-gray-500 mt-1 line-clamp-1">
+              {link?.notes}
+            </p>
+            <p className="text-xs mt-2 text-gray-400">
+              Category: {link.category?.name}
+            </p>
+          </div>
         ))}
       </div>
     </div>

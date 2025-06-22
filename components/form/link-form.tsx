@@ -149,9 +149,15 @@ function FormComponent({
               <FormLabel>Category</FormLabel>
               <FormControl className="p-2 rounded-md">
                 <select {...field}>
-                  <option value='' disabled selected hidden>Select a category</option>
+                  <option value="" disabled  hidden>
+                    Select a category
+                  </option>
                   {categories.map((category: CategoryType) => (
-                    <option className="p-2 capitalize" value={category.id} key={category.id}>
+                    <option
+                      className="p-2 capitalize"
+                      value={category.id}
+                      key={category.id}
+                    >
                       {category.name}
                     </option>
                   ))}
